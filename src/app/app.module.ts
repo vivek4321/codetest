@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {EmployeesService} from './employeesService';
+import {SkillsService} from './skillsService';
 
 import { AppComponent } from './app.component';
 
@@ -13,9 +14,10 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpModule,
+    FormsModule      
   ],
-  providers: [EmployeesService],
+  providers: [EmployeesService,SkillsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

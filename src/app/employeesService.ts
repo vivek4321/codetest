@@ -17,6 +17,10 @@ export class EmployeesService {
                     .map((res:any) => res.json());
   }
   
+  public postEmployee(value:any): Observable<any> {
+    return this.http.post("http://localhost:4200/assets/data/employees.json",value)
+    .map((res:any) => res.json());
+  }
                   //   getEmployees(): Observable<any> {
                   //     // get users from api
                   //     return this.http.get('app/employees.json')//, options)

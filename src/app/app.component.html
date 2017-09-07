@@ -5,26 +5,30 @@
 <table class="table table-bordered">
       <thead>
         <tr>
-          <th>empId</th>
           <th>firstName</th>
           <th>lastName</th>
           <th>jobTitleName</th>
           <th>phoneNumber</th>
           <th>emailAddress</th>
+          <th>skills</th>
           <th>Add</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
       </thead>
       <tbody>
-          <tr *ngFor="let employee of employees; let i=index">              
-              <td>{{employee.empId}}</td>
+          <tr *ngFor="let employee of employees; let i=index">      
               <td>{{employee.firstName}}</td>
               <td>{{employee.lastName}}</td>
               <td>{{employee.jobTitleName}}</td>
               <td>{{employee.phoneNumber}}</td>
               <td>{{employee.emailAddress}}</td>
-              <td><button ng class="btn btn-primary">Add</button></td>
+              <td>
+                <span *ngFor="let skillsNum of employee.skills">
+                    <span>{{skills[skillsNum-1].displayName}}</span>                    
+                </span>
+              </td>
+              <td><button (click)="addForm()" ng class="btn btn-primary">Add</button></td>
               <td><button class="btn btn-primary">Edit</button></td>
               <td><button class="btn btn-primary">Delete</button></td>
              </tr>
@@ -32,35 +36,61 @@
     </table>
 
 
-    <form #form="" (ngSubmit)="submitForm(form.value)">
-        <div class="form-group">
-          <label>First Name:</label>
-          <!-- Since we are working with template driven forms, we can use the ngModel directive to capture the values of our forms. One thing to note if you are coming from Angular 1.x. Using ngModel as shown below creates a one-way data binding, so once we hit submit the data is only sent to the controller. If we wanted to use two-way data binding, we would have to wrap the ngModel in [()] and assign an attribute to it. Also the name of the field corresponds to the name attribute so our first input will be firstName. -->
-          <input type="text" class="form-control" placeholder="John" name="firstName" ngModel required>
+    <form *ngIf="showForm"  (ngSubmit)="employeeForm.valid && register(employeeForm.value)" #employeeForm="ngForm" >
+        <h2>Add Employee</h2>
+          <fieldset>
+              <div class="form-group">
+                <input class="form-control" #firstName="ngModel" placeholder="firstName" type="text"  ngModel name="firstName" required>
+                <span style="color:red" >
+                  <span *ngIf="firstName.errors?.required && firstName.touched">firstName is required.</span>
+                </span>
+              </div>
+              <div class="form-group">
+                <input class="form-control" #lastName="ngModel" placeholder="lastName" type="email"  ngModel name="lastName" required>
+                
+                <span style="color:red" >
+                  <span *ngIf="lastName.errors?.required && lastName.touched">lastName is required.</span>
+                </span>
+              </div>
+              <div class="form-group">
+                  <input class="form-control" #jobTitleName="ngModel" placeholder="jobTitleName" type="email"  ngModel name="jobTitleName" required>
+                  <span style="color:red" >
+                    <span *ngIf="jobTitleName.errors?.required && jobTitleName.touched">jobTitleName is required.</span>  
+                  </span>
+              </div>
+              <div class="form-group">
+                    <input class="form-control" #phoneNumber="ngModel" placeholder="phoneNumber" type="number"  ngModel name="phoneNumber" required>
+                    <span style="color:red" >
+                      <span *ngIf="phoneNumber.errors?.required && phoneNumber.touched">phoneNumber is required.</span>    
+                    </span>
+              </div>
+              <div class="form-group">
+                  <input class="form-control" #emailAddress="ngModel" ngControl="email" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$" placeholder="E-mail" type="email"  ngModel name="emailAddress" required>
+                  <div style="color:red" *ngIf="emailAddress.valid || emailAddress.touched">
+                      <div *ngIf="emailAddress.errors && emailAddress.errors.required">
+                          Email is required
+                      </div>
+                      <div *ngIf="emailAddress.errors && emailAddress.errors.pattern">
+                          Email is invalid
+                      </div>
+                  </div>                  
+            </div>
+
+            <div class="form-group">
+                <select multiple #skillsSet="ngModel" ngModel name="skills" required>
+                    <option *ngFor="let item of skills" [value]="item.id">{{item.displayName}}</option>
+                </select>
+              <span style="color:red" >
+                <span *ngIf="skillsSet.errors?.required && skillsSet.touched">Skills is required.</span>
+              </span>
+        </div>   
+        <div class="form-group">              
+            <div style="color:red" >
+                <span *ngIf=" submitted && employeeForm.invalid">Please fill all the mandatory fields</span>
+            </div>
+              <input (click)="submitForm()" type="submit" class="btn btn-md btn-primary" value="Save" >
         </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" class="form-control" placeholder="Doe" name="lastName" ngModel required>
-        </div>
-        <div class="form-group">
-            <label>jobTitleName</label>
-            <input type="text" class="form-control" placeholder="Doe" name="lastName" ngModel required>
-        </div>
-        <div class="form-group">
-            <label>phoneNumber</label>
-            <input type="text" class="form-control" placeholder="Doe" name="lastName" ngModel required>
-        </div>
-        <div class="form-group">
-            <label>emailAddress</label>
-            <input type="text" class="form-control" placeholder="Doe" name="lastName" ngModel required>
-        </div>
-        <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" class="form-control" placeholder="Doe" name="lastName" ngModel required>
-        </div>
-          
-        
-        
+          </fieldset>
       </form>
     </div>
   </div>
